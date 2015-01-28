@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Index</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Index</h1>
+
+    
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>ngSignalR <a href="https://app.wercker.com/project/bykey/849f27e78ebed717533f9c6ef125b263"><img src="https://app.wercker.com/status/849f27e78ebed717533f9c6ef125b263/s" alt="wercker status" title="wercker status"></a></h1><p>An AngularJS provider for the SignalR JQuery client.</p>
+<p>This module depends on the following libraries:</p>
+<ul>
+<li><a href="http://jquery.com/">JQuery</a></li>
+<li><a href="https://angularjs.org/">AngularJS</a></li>
+<li><a href="https://github.com/SignalR/SignalR">SignalR JQuery Client</a></li>
+</ul>
+<h2>Installing</h2><p>bower commands here</p>
+<h2>Setting Up</h2><p>To inject the module  into your app use 'ngSignalR' as shown below:</p>
+<pre class="prettyprint source lang-javascript"><code>angular.module('App', ['ngSignalR']);</code></pre><p>To configure the connection transports, use the setTransports function in the config section of your app:</p>
+<pre class="prettyprint source lang-javascript"><code>angular.module('App')
+  .config(function(signalrProvider){
+    signalrProvider.setTransports(['webSockets', 'serverSentEvents']);
+});</code></pre><p>SignalR takes 4 transport methods: </p>
+<ul>
+<li>Web Sockets</li>
+<li>Server Sent Events</li>
+<li>Forever Frame</li>
+<li>Long Polling</li>
+</ul>
+<h2>Usage</h2><h3>Creating a connection</h3><p>There are 2 ways to create connections in the SignalR client, one way is to use the generated proxy, and another is to use your own proxy.</p>
+<h4>With the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+  signalr.startConnection(); //Start the connection
+});</code></pre><h4>Without the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><p>NOTE: Starting the connection should be done right at the end:</p>
+<pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  //Must come before starting the connection
+  signalr.logging(connection, true); //Enabled default SignalR client logging
+  signalr.receive(connection, 'eventName', function (data) {
+    console.log(data);
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><p>Best practice is to have a function that starts the connection and binds all the listener events:</p>
+<pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  var startConnection = function () {    
+    signalr.receive(connection, 'eventName', function (data) {
+      //Do something when invoked by server
+    });
+
+    signalr.startHubConnection(connection); //Start the connection
+  };
+  startConnection();
+});</code></pre><p>Starting the connection also returns a promise that gets resolved once the connection is made:</p>
+<pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  $scope.model = {
+    connectionOpen: false // Initialize the connectionOpen flag as false
+  };
+
+  var startConnection = function () {    
+    signalr.receive(connection, 'eventName', function (data) {
+      //Do something when invoked by server
+    });
+
+    signalr.startHubConnection(connection)
+    .then(function() {
+      $scope.model.connectionOpen = true; //Set the connected flag to true
+    });
+  };
+  startConnection();
+});</code></pre><h3>Receiving data</h3><p>To receive data we will have to look at which way the connection was established, these are the 2 ways of receiving data:</p>
+<h4>With the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+  signalr.receive(connection, 'eventName', function (data) {
+    console.log(data);
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h4>Without the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.receiveProxy(proxy, 'eventName', function (data) {
+    console.log(data);
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h3>Sending Data</h3><h4>With the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  $scope.send = function() {
+    var obj = {
+      property1: 'abc'
+    };
+    signalr.send(connection, 'eventName', obj);
+  };
+
+  signalr.startConnection(); //Start the connection
+});</code></pre><h4>Without the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  $scope.send = function () {
+    var obj = {
+      property1: 'abc'
+    };
+    signalr.sendProxy(proxy, 'eventName', obj);
+  };
+
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h3>Stopping a connection</h3><h4>With the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  $scope.stopConnection = function () {
+    signalr.stopConnection(connection)
+    .then(function () {
+      //Do Something after connection is closed.
+    });
+  };
+  signalr.startConnection(); //Start the connection
+});</code></pre><h4>Without the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  $scope.stopConnection = function () {
+    signalr.stopConnection(connection)
+    .then(function () {
+      //Do Something after connection is closed.
+    });
+  };
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h5>Stopping a connection on when view is changed</h5><p>If we don't clean up the connection on view changes, the connection will remain open. To clean up we use Angular's garbage collection in our controller.</p>
+<pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  //Garbage Collection
+  $scope.$on('$destroy', function () {
+    signalr.stopConnection(connection);
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h3>Events</h3><p>The following functions provide a means to execute code on a connection's lifetime events.</p>
+<h4>On Start</h4><p>This fires when a connection is made and no data has come in yet.</p>
+<h4>With the generated Proxy:</h4><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.starting(function() {
+    //Do something when the connection starts before any data is received
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.starting(connection, function() {
+    //Do something when the connection starts before any data is received
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On Receive</h4><p>This is fired when any client side function is invoked by the server.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.received(function() {
+    //Do something when a client side function is invoked
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.received(connection, function() {
+    //Do something when a client side function is invoked
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On Slow Connection</h4><p>This is fired when SignalR detects a slow connection.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.connectionSlow(function() {
+    //Do something when the connection is slow
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.connectionSlow(connection, function() {
+    //Do something when the connection is slow
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On Disconnection</h4><p>This is fired when the connection is terminated.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.disconnected(function() {
+    //Do something when the connection is terminated
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.disconnected(connection, function() {
+    //Do something when the connection is terminated
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On Reconnecting</h4><p>This is fired when the client is reconnecting to the server.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.reconnecting(function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.reconnecting(connection, function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On Reconnected</h4><p>This is fired when the client has successfully reconnected to the server.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.reconnected(function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.reconnected(connection, function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On State Changed</h4><p>This is fired when the state of the connection has changed in any way.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.stateChanged(function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.stateChanged(connection, function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h4>On Error</h4><p>This is fired when any error occours with the connection.</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.error(function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.error(connection, function() {
+    //Do something while the client is reconnecting
+  });
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h3>Logging</h3><p>The following function allows you to enable/disabled SignalR's connection logging:</p>
+<h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  var connection = signalr.createConnection('HubName');
+
+  signalr.logging(true); //Enabled default SignalR client logging
+  signalr.startConnection(); //Start the connection
+});</code></pre><h5>Without the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
+.controller('Ctrl', function($scope, signalr) {
+  //Starting the connection
+  var hub = signalr.createHubConnection('HubName');
+  var connection = hub.connection;
+  var proxy = hub.proxy;
+
+  signalr.logging(connection, true); //Enabled default SignalR client logging
+  signalr.startHubConnection(connection); //Start the connection
+});</code></pre><h3>Resources</h3><ul>
+<li><a href="https://docs.angularjs.org/guide/services">AngularJS Services</a></li>
+<li><a href="http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client">SignalR jQuery client library</a></li>
+<li><a href="https://github.com/SignalR/bower-signalr">SignalR jQuery client repo</a></li>
+</ul>
+<h3>License</h3><p>The MIT License (MIT)</p>
+<p>Copyright (c) 2015 danielfoord</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Global</h3><ul><li><a href="global.html#connectionSlow">connectionSlow</a></li><li><a href="global.html#createConnection">createConnection</a></li><li><a href="global.html#createHubConnection">createHubConnection</a></li><li><a href="global.html#disconnected">disconnected</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#logging">logging</a></li><li><a href="global.html#receive">receive</a></li><li><a href="global.html#received">received</a></li><li><a href="global.html#receiveProxy">receiveProxy</a></li><li><a href="global.html#reconnected">reconnected</a></li><li><a href="global.html#reconnecting">reconnecting</a></li><li><a href="global.html#send">send</a></li><li><a href="global.html#sendProxy">sendProxy</a></li><li><a href="global.html#startConnection">startConnection</a></li><li><a href="global.html#startHubConnection">startHubConnection</a></li><li><a href="global.html#starting">starting</a></li><li><a href="global.html#stateChanged">stateChanged</a></li><li><a href="global.html#stopAllConnections">stopAllConnections</a></li><li><a href="global.html#stopConnection">stopConnection</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Wed Jan 28 2015 11:42:45 GMT+0200 (South Africa Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
