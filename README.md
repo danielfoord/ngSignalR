@@ -1,4 +1,4 @@
-# ngSignalR #
+# ngSignalR [![Build Status](https://travis-ci.org/danielfoord/ngSignalR.svg?branch=master)](https://travis-ci.org/danielfoord/ngSignalR)#
 
 An AngularJS provider for the SignalR JQuery client.
 

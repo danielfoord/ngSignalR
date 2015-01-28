@@ -41,7 +41,7 @@
 
 
     <section>
-        <article><h1>ngSignalR <a href="https://app.wercker.com/project/bykey/849f27e78ebed717533f9c6ef125b263"><img src="https://app.wercker.com/status/849f27e78ebed717533f9c6ef125b263/s" alt="wercker status" title="wercker status"></a></h1><p>An AngularJS provider for the SignalR JQuery client.</p>
+        <article><h1>ngSignalR <a href="https://travis-ci.org/danielfoord/ngSignalR"><img src="https://travis-ci.org/danielfoord/ngSignalR.svg?branch=master" alt="Build Status"></a></h1><p>An AngularJS provider for the SignalR JQuery client.</p>
 <p>This module depends on the following libraries:</p>
 <ul>
 <li><a href="http://jquery.com/">JQuery</a></li>
@@ -220,9 +220,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.starting(connection, function() {
+  signalr.starting(function() {
     //Do something when the connection starts before any data is received
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On Receive</h4><p>This is fired when any client side function is invoked by the server.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -240,9 +241,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.received(connection, function() {
+  signalr.received(function() {
     //Do something when a client side function is invoked
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On Slow Connection</h4><p>This is fired when SignalR detects a slow connection.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -260,9 +262,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.connectionSlow(connection, function() {
+  signalr.connectionSlow(function() {
     //Do something when the connection is slow
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On Disconnection</h4><p>This is fired when the connection is terminated.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -280,9 +283,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.disconnected(connection, function() {
+  signalr.disconnected(function() {
     //Do something when the connection is terminated
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On Reconnecting</h4><p>This is fired when the client is reconnecting to the server.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -300,9 +304,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.reconnecting(connection, function() {
+  signalr.reconnecting(function() {
     //Do something while the client is reconnecting
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On Reconnected</h4><p>This is fired when the client has successfully reconnected to the server.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -320,9 +325,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.reconnected(connection, function() {
+  signalr.reconnected(function() {
     //Do something while the client is reconnecting
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On State Changed</h4><p>This is fired when the state of the connection has changed in any way.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -340,9 +346,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.stateChanged(connection, function() {
+  signalr.stateChanged(function() {
     //Do something while the client is reconnecting
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h4>On Error</h4><p>This is fired when any error occours with the connection.</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -360,9 +367,10 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.error(connection, function() {
+  signalr.error(function() {
     //Do something while the client is reconnecting
-  });
+  }, connection);
+
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h3>Logging</h3><p>The following function allows you to enable/disabled SignalR's connection logging:</p>
 <h5>With the generated proxy</h5><pre class="prettyprint source lang-javascript"><code>angular.module('App')
@@ -378,7 +386,7 @@
   var connection = hub.connection;
   var proxy = hub.proxy;
 
-  signalr.logging(connection, true); //Enabled default SignalR client logging
+  signalr.logging(true, connection); //Enabled default SignalR client logging
   signalr.startHubConnection(connection); //Start the connection
 });</code></pre><h3>Resources</h3><ul>
 <li><a href="https://docs.angularjs.org/guide/services">AngularJS Services</a></li>
@@ -418,7 +426,7 @@ THE SOFTWARE.</p></article>
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Wed Jan 28 2015 11:42:45 GMT+0200 (South Africa Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Wed Jan 28 2015 12:12:10 GMT+0200 (South Africa Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
