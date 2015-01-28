@@ -1,0 +1,643 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ngSignalR by danielfoord</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>ngSignalR</h1>
+        <p>AngularJS Factory for SignalR jQuery clients</p>
+        <p class="view"><a href="https://github.com/danielfoord/ngSignalR">View the Project on GitHub <small>danielfoord/ngSignalR</small></a></p>
+        <ul>
+          <li><a href="https://github.com/danielfoord/ngSignalR/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/danielfoord/ngSignalR/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/danielfoord/ngSignalR">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="ngsignalr-" class="anchor" href="#ngsignalr-" aria-hidden="true"><span class="octicon octicon-link"></span></a>ngSignalR <img src="https://travis-ci.org/danielfoord/ngSignalR.svg?branch=master" alt="Build Status">
+</h1>
+
+<p>An AngularJS provider for the SignalR JQuery client.</p>
+
+<p>This module depends on the following libraries:</p>
+
+<ul>
+<li><a href="http://jquery.com/">JQuery</a></li>
+<li><a href="https://angularjs.org/">AngularJS</a></li>
+<li><a href="https://github.com/SignalR/SignalR">SignalR JQuery Client</a></li>
+</ul>
+
+<h2>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing</h2>
+
+<p>bower commands here</p>
+
+<h2>
+<a id="setting-up" class="anchor" href="#setting-up" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting Up</h2>
+
+<p>To inject the module  into your app use 'ngSignalR' as shown below:</p>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>, [<span class="pl-s1"><span class="pl-pds">'</span>ngSignalR<span class="pl-pds">'</span></span>]);</pre></div>
+
+<p>To configure the connection transports, use the setTransports function in the config section of your app:</p>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+  .config(<span class="pl-st">function</span>(<span class="pl-vpf">signalrProvider</span>){
+    signalrProvider.setTransports([<span class="pl-s1"><span class="pl-pds">'</span>webSockets<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>serverSentEvents<span class="pl-pds">'</span></span>]);
+});</pre></div>
+
+<p>SignalR takes 4 transport methods: </p>
+
+<ul>
+<li>Web Sockets</li>
+<li>Server Sent Events</li>
+<li>Forever Frame</li>
+<li>Long Polling</li>
+</ul>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="creating-a-connection" class="anchor" href="#creating-a-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a connection</h3>
+
+<p>There are 2 ways to create connections in the SignalR client, one way is to use the generated proxy, and another is to use your own proxy.</p>
+
+<h4>
+<a id="with-the-generated-proxy" class="anchor" href="#with-the-generated-proxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="without-the-generated-proxy" class="anchor" href="#without-the-generated-proxy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<p>NOTE: Starting the connection should be done right at the end:</p>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  <span class="pl-c">//Must come before starting the connection</span>
+  signalr.logging(connection, <span class="pl-c1">true</span>); <span class="pl-c">//Enabled default SignalR client logging</span>
+  signalr.receive(connection, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+  });
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<p>Best practice is to have a function that starts the connection and binds all the listener events:</p>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  <span class="pl-s">var</span> <span class="pl-en">startConnection</span> <span class="pl-k">=</span> <span class="pl-st">function</span> () {    
+    signalr.receive(connection, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+      <span class="pl-c">//Do something when invoked by server</span>
+    });
+
+    signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+  };
+  startConnection();
+});</pre></div>
+
+<p>Starting the connection also returns a promise that gets resolved once the connection is made:</p>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  $scope.model <span class="pl-k">=</span> {
+    connectionOpen<span class="pl-k">:</span> <span class="pl-c1">false</span> <span class="pl-c">// Initialize the connectionOpen flag as false</span>
+  };
+
+  <span class="pl-s">var</span> <span class="pl-en">startConnection</span> <span class="pl-k">=</span> <span class="pl-st">function</span> () {    
+    signalr.receive(connection, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+      <span class="pl-c">//Do something when invoked by server</span>
+    });
+
+    signalr.startHubConnection(connection)
+    .then(<span class="pl-st">function</span>() {
+      $scope.model.connectionOpen <span class="pl-k">=</span> <span class="pl-c1">true</span>; <span class="pl-c">//Set the connected flag to true</span>
+    });
+  };
+  startConnection();
+});</pre></div>
+
+<h3>
+<a id="receiving-data" class="anchor" href="#receiving-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Receiving data</h3>
+
+<p>To receive data we will have to look at which way the connection was established, these are the 2 ways of receiving data:</p>
+
+<h4>
+<a id="with-the-generated-proxy-1" class="anchor" href="#with-the-generated-proxy-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  signalr.receive(connection, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="without-the-generated-proxy-1" class="anchor" href="#without-the-generated-proxy-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.receiveProxy(proxy, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(data);
+  });
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h3>
+<a id="sending-data" class="anchor" href="#sending-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sending Data</h3>
+
+<h4>
+<a id="with-the-generated-proxy-2" class="anchor" href="#with-the-generated-proxy-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  <span class="pl-s3">$scope</span>.<span class="pl-en">send</span> <span class="pl-k">=</span> <span class="pl-st">function</span>() {
+    <span class="pl-s">var</span> obj <span class="pl-k">=</span> {
+      property1<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>abc<span class="pl-pds">'</span></span>
+    };
+    signalr.<span class="pl-s3">send</span>(connection, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, obj);
+  };
+
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="without-the-generated-proxy-2" class="anchor" href="#without-the-generated-proxy-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  <span class="pl-s3">$scope</span>.<span class="pl-en">send</span> <span class="pl-k">=</span> <span class="pl-st">function</span> () {
+    <span class="pl-s">var</span> obj <span class="pl-k">=</span> {
+      property1<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>abc<span class="pl-pds">'</span></span>
+    };
+    signalr.sendProxy(proxy, <span class="pl-s1"><span class="pl-pds">'</span>eventName<span class="pl-pds">'</span></span>, obj);
+  };
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h3>
+<a id="stopping-a-connection" class="anchor" href="#stopping-a-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stopping a connection</h3>
+
+<h4>
+<a id="with-the-generated-proxy-3" class="anchor" href="#with-the-generated-proxy-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  <span class="pl-s3">$scope</span>.<span class="pl-en">stopConnection</span> <span class="pl-k">=</span> <span class="pl-st">function</span> () {
+    signalr.stopConnection(connection)
+    .then(<span class="pl-st">function</span> () {
+      <span class="pl-c">//Do Something after connection is closed.</span>
+    });
+  };
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="without-the-generated-proxy-3" class="anchor" href="#without-the-generated-proxy-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  <span class="pl-s3">$scope</span>.<span class="pl-en">stopConnection</span> <span class="pl-k">=</span> <span class="pl-st">function</span> () {
+    signalr.stopConnection(connection)
+    .then(<span class="pl-st">function</span> () {
+      <span class="pl-c">//Do Something after connection is closed.</span>
+    });
+  };
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="stopping-a-connection-on-when-view-is-changed" class="anchor" href="#stopping-a-connection-on-when-view-is-changed" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stopping a connection on when view is changed</h5>
+
+<p>If we don't clean up the connection on view changes, the connection will remain open. To clean up we use Angular's garbage collection in our controller.</p>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  <span class="pl-c">//Garbage Collection</span>
+  $scope.$on(<span class="pl-s1"><span class="pl-pds">'</span>$destroy<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> () {
+    signalr.stopConnection(connection);
+  });
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h3>
+<a id="events" class="anchor" href="#events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h3>
+
+<p>The following functions provide a means to execute code on a connection's lifetime events.</p>
+
+<h4>
+<a id="on-start" class="anchor" href="#on-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Start</h4>
+
+<p>This fires when a connection is made and no data has come in yet.</p>
+
+<h4>
+<a id="with-the-generated-proxy-4" class="anchor" href="#with-the-generated-proxy-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated Proxy:</h4>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.starting(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when the connection starts before any data is received</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-4" class="anchor" href="#without-the-generated-proxy-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.starting(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when the connection starts before any data is received</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-receive" class="anchor" href="#on-receive" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Receive</h4>
+
+<p>This is fired when any client side function is invoked by the server.</p>
+
+<h5>
+<a id="with-the-generated-proxy-5" class="anchor" href="#with-the-generated-proxy-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.received(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when a client side function is invoked</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-5" class="anchor" href="#without-the-generated-proxy-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.received(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when a client side function is invoked</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-slow-connection" class="anchor" href="#on-slow-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Slow Connection</h4>
+
+<p>This is fired when SignalR detects a slow connection.</p>
+
+<h5>
+<a id="with-the-generated-proxy-6" class="anchor" href="#with-the-generated-proxy-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.connectionSlow(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when the connection is slow</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-6" class="anchor" href="#without-the-generated-proxy-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.connectionSlow(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when the connection is slow</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-disconnection" class="anchor" href="#on-disconnection" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Disconnection</h4>
+
+<p>This is fired when the connection is terminated.</p>
+
+<h5>
+<a id="with-the-generated-proxy-7" class="anchor" href="#with-the-generated-proxy-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.disconnected(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when the connection is terminated</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-7" class="anchor" href="#without-the-generated-proxy-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.disconnected(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something when the connection is terminated</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-reconnecting" class="anchor" href="#on-reconnecting" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Reconnecting</h4>
+
+<p>This is fired when the client is reconnecting to the server.</p>
+
+<h5>
+<a id="with-the-generated-proxy-8" class="anchor" href="#with-the-generated-proxy-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.reconnecting(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-8" class="anchor" href="#without-the-generated-proxy-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.reconnecting(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-reconnected" class="anchor" href="#on-reconnected" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Reconnected</h4>
+
+<p>This is fired when the client has successfully reconnected to the server.</p>
+
+<h5>
+<a id="with-the-generated-proxy-9" class="anchor" href="#with-the-generated-proxy-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.reconnected(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-9" class="anchor" href="#without-the-generated-proxy-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.reconnected(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-state-changed" class="anchor" href="#on-state-changed" aria-hidden="true"><span class="octicon octicon-link"></span></a>On State Changed</h4>
+
+<p>This is fired when the state of the connection has changed in any way.</p>
+
+<h5>
+<a id="with-the-generated-proxy-10" class="anchor" href="#with-the-generated-proxy-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.stateChanged(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-10" class="anchor" href="#without-the-generated-proxy-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.stateChanged(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h4>
+<a id="on-error" class="anchor" href="#on-error" aria-hidden="true"><span class="octicon octicon-link"></span></a>On Error</h4>
+
+<p>This is fired when any error occours with the connection.</p>
+
+<h5>
+<a id="with-the-generated-proxy-11" class="anchor" href="#with-the-generated-proxy-11" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr<span class="pl-s3">.error</span>(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  });
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-11" class="anchor" href="#without-the-generated-proxy-11" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr<span class="pl-s3">.error</span>(<span class="pl-st">function</span>() {
+    <span class="pl-c">//Do something while the client is reconnecting</span>
+  }, connection);
+
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h3>
+<a id="logging" class="anchor" href="#logging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Logging</h3>
+
+<p>The following function allows you to enable/disabled SignalR's connection logging:</p>
+
+<h5>
+<a id="with-the-generated-proxy-12" class="anchor" href="#with-the-generated-proxy-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>With the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> signalr.createConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+
+  signalr.logging(<span class="pl-c1">true</span>); <span class="pl-c">//Enabled default SignalR client logging</span>
+  signalr.startConnection(); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h5>
+<a id="without-the-generated-proxy-12" class="anchor" href="#without-the-generated-proxy-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>Without the generated proxy</h5>
+
+<div class="highlight highlight-javascript"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>App<span class="pl-pds">'</span></span>)
+.controller(<span class="pl-s1"><span class="pl-pds">'</span>Ctrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span>(<span class="pl-vpf">$scope</span>, <span class="pl-vpf">signalr</span>) {
+  <span class="pl-c">//Starting the connection</span>
+  <span class="pl-s">var</span> hub <span class="pl-k">=</span> signalr.createHubConnection(<span class="pl-s1"><span class="pl-pds">'</span>HubName<span class="pl-pds">'</span></span>);
+  <span class="pl-s">var</span> connection <span class="pl-k">=</span> hub.connection;
+  <span class="pl-s">var</span> proxy <span class="pl-k">=</span> hub.proxy;
+
+  signalr.logging(<span class="pl-c1">true</span>, connection); <span class="pl-c">//Enabled default SignalR client logging</span>
+  signalr.startHubConnection(connection); <span class="pl-c">//Start the connection</span>
+});</pre></div>
+
+<h3>
+<a id="resources" class="anchor" href="#resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources</h3>
+
+<ul>
+<li><a href="https://docs.angularjs.org/guide/services">AngularJS Services</a></li>
+<li><a href="http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client">SignalR jQuery client library</a></li>
+<li><a href="https://github.com/SignalR/bower-signalr">SignalR jQuery client repo</a></li>
+</ul>
+
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h3>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2015 danielfoord</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/danielfoord">danielfoord</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
