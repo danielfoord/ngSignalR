@@ -1,0 +1,22 @@
+{
+  "name": "ngSignalR",
+  "version": "0.0.1",
+  "homepage": "https://github.com/danielfoord/ngSignalR",
+  "authors": [
+    "Daniel Foord <danfoord1@gmail.com>"
+  ],
+  "description": "AngularJS Factory for SignalR jQuery clients",
+  "main": "src/ngSignalR.js",
+  "keywords": [
+    "angularjs",
+    "signalr"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -9,7 +9,12 @@ This module depends on the following libraries:
 - [SignalR JQuery Client](https://github.com/SignalR/SignalR)
 
 ## Installing ##
-bower commands here
+Bower:
+`bower install ngsignalr`
+
+ManuaL: Just download the repo and
+`<script src="ngSignalR.js"></script>`
+
 ## Setting Up ##
 To inject the module  into your app use 'ngSignalR' as shown below:
 ```javascript
