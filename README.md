@@ -527,6 +527,10 @@ angular.module('App')
 - [SignalR jQuery client library](http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-javascript-client)
 - [SignalR jQuery client repo](https://github.com/SignalR/bower-signalr)
 
+### Demo ###
+
+A working demo can be found [here](https://github.com/danielfoord/ngSignalR-demo)
+
 ### License ###
 The MIT License (MIT)
 
