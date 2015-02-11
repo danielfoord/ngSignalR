@@ -7,7 +7,7 @@
  */
 angular.module('ngSignalR', [])
 .constant('$', window.$)
-.provider('signalr', ['$', function ($) {
+.provider('signalr', [function () {
 
   //Transport methods used by SignalR
   this.transports = ['webSockets', 'serverSentEvents', 'foreverFrame', 'longPolling'];
@@ -29,7 +29,7 @@ angular.module('ngSignalR', [])
     return this.transports;
   };
 
-  this.$get = function ($rootScope, $q, $) {
+  this.$get = ['$rootScope', '$q', '$', function ($rootScope, $q, $) {
 
     //Get provided transports to use in connections.
     var transports = this.transports;
@@ -389,6 +389,6 @@ angular.module('ngSignalR', [])
       }
 
     };
-  };
+  }];
 }
 ]);
