@@ -1,6 +1,6 @@
 {
   "name": "ngSignalR",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/danielfoord/ngSignalR",
   "authors": [
     "Daniel Foord <danfoord1@gmail.com>"
