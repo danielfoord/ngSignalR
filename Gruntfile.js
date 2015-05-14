@@ -13,9 +13,9 @@ module.exports = function (grunt) {
       }
     },
     jshint: {
-      all: ['src/ngSignalR.js'],
+      all: ['src/ngSignalR.js', 'spec/**/*.spec.js'],
       options: {
-        node:false
+        jshintrc: '.jshintrc'
       } 
     },
     uglify:{

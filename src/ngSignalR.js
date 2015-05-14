@@ -8,6 +8,8 @@
 angular.module('ngSignalR', [])
 .constant('$', window.$)
 .provider('signalr', [function () {
+  
+  'use strict';
 
   //Transport methods used by SignalR
   this.transports = ['webSockets', 'serverSentEvents', 'foreverFrame', 'longPolling'];
@@ -177,7 +179,7 @@ angular.module('ngSignalR', [])
       receiveProxy: function (proxy, fnName, callback) {
 
         if (callback && !angular.isFunction(callback)) {
-          throw TypeError(errmsg.callback);
+          throw new TypeError(errmsg.callback);
         }
         proxy.on(fnName, callback);
 

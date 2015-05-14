@@ -1,4 +1,6 @@
-describe("ngSignalR Provider", function() {
+describe('ngSignalR Provider', function() {
+  
+  'use strict';
   
   var ngSignalrProvider;
 
@@ -11,19 +13,19 @@ describe("ngSignalR Provider", function() {
     inject(function(){});
   });
 
-  it("getTransports: gets the transport methods being used", function () {
+  it('getTransports: gets the transport methods being used', function () {
     var transports = ngSignalrProvider.getTransports();
     expect(transports).toEqual(['webSockets', 'serverSentEvents', 'foreverFrame', 'longPolling']);
   });
 
-  it("setTransports: throws exception if not given an Array", function () {
+  it('setTransports: throws exception if not given an Array', function () {
   	expect(function(){
   	  ngSignalrProvider.setTransports();
   	})
   	.toThrow(new Error('setTransports expects an \'Array\''));
   });
 
-  it("setTransports: sets the transport methods being used", function () {
+  it('setTransports: sets the transport methods being used', function () {
     ngSignalrProvider.setTransports(['webSockets']);
     var transports = ngSignalrProvider.getTransports();
     expect(transports).toEqual(['webSockets']);
