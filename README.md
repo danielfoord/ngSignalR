@@ -1,4 +1,9 @@
-# ngSignalR [![Build Status](https://travis-ci.org/danielfoord/ngSignalR.svg?branch=master)](https://travis-ci.org/danielfoord/ngSignalR)#
+# ngSignalR #
+
+[![Build Status](https://travis-ci.org/danielfoord/ngSignalR.svg?branch=master)](https://travis-ci.org/danielfoord/ngSignalR)
+[![Codacy Badge](https://www.codacy.com/project/badge/40a1bea5a2974594bca0823ce133e06a)](https://www.codacy.com/app/danfoord1/ngSignalR)
+[![Inch Badge](https://inch-ci.org/github/danielfoord/ngSignalR.svg?branch=master)](https://inch-ci.org/github/danielfoord/ngSignalR.svg?branch=master)
+
 
 An AngularJS provider for the SignalR JQuery client.
 
@@ -57,7 +62,7 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
+  
   signalr.startHubConnection(connection); //Start the connection
 });
 ```
@@ -68,7 +73,6 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
   
   //Must come before starting the connection
   signalr.logging(connection, true); //Enabled default SignalR client logging
@@ -85,7 +89,6 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
   
   var startConnection = function () {    
     signalr.receive(connection, 'eventName', function (data) {
@@ -104,7 +107,6 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
   
   $scope.model = {
     connectionOpen: false // Initialize the connectionOpen flag as false
@@ -132,6 +134,7 @@ To receive data we will have to look at which way the connection was established
 angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var connection = signalr.createConnection('HubName');
+
   signalr.receive(connection, 'eventName', function (data) {
     console.log(data);
   });
@@ -145,7 +148,6 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.receiveProxy(proxy, 'eventName', function (data) {
     console.log(data);
@@ -214,7 +216,6 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   $scope.stopConnection = function () {
     signalr.stopConnection(connection)
@@ -234,7 +235,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   //Garbage Collection
   $scope.$on('$destroy', function () {
@@ -268,7 +268,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.starting(function() {
     //Do something when the connection starts before any data is received
@@ -299,7 +298,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.received(function() {
     //Do something when a client side function is invoked
@@ -330,7 +328,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.connectionSlow(function() {
     //Do something when the connection is slow
@@ -361,7 +358,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.disconnected(function() {
     //Do something when the connection is terminated
@@ -392,7 +388,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.reconnecting(function() {
     //Do something while the client is reconnecting
@@ -423,7 +418,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.reconnected(function() {
     //Do something while the client is reconnecting
@@ -454,7 +448,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.stateChanged(function() {
     //Do something while the client is reconnecting
@@ -485,7 +478,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.error(function() {
     //Do something while the client is reconnecting
@@ -514,7 +506,6 @@ angular.module('App')
   //Starting the connection
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  var proxy = hub.proxy;
 
   signalr.logging(true, connection); //Enabled default SignalR client logging
   signalr.startHubConnection(connection); //Start the connection
