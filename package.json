@@ -1,9 +1,12 @@
 {
-  "name": "ng-signalR",
+  "name": "ngSignalR",
   "version": "0.0.4",
   "description": "AngularJS Implementaion of .NET SignalR jQuery library.",
   "keywords": [
-    "library"
+    "signalr",
+    "angularjs",
+    "websockets",
+    "ngSignalR"
   ],
   "homepage": "https://github.com/danielfoord/ngSignalR",
   "repository": {
