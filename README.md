@@ -1,9 +1,10 @@
 # ngSignalR #
 
 [![Build Status](https://travis-ci.org/danielfoord/ngSignalR.svg?branch=master)](https://travis-ci.org/danielfoord/ngSignalR)
+[![Bower](https://img.shields.io/bower/v/ngsignalr.svg)](https://img.shields.io/bower/v/ngsignalr.svg)
+[![Bower](https://img.shields.io/nuget/v/ngsignalr.svg)](https://img.shields.io/nuget/v/ngsignalr.svg)
 [![Codacy Badge](https://www.codacy.com/project/badge/40a1bea5a2974594bca0823ce133e06a)](https://www.codacy.com/app/danfoord1/ngSignalR)
 [![Inch Badge](https://inch-ci.org/github/danielfoord/ngSignalR.svg?branch=master)](https://inch-ci.org/github/danielfoord/ngSignalR.svg?branch=master)
-
 
 An AngularJS provider for the SignalR JQuery client.
 
@@ -17,7 +18,11 @@ This module depends on the following libraries:
 Bower:
 `bower install ngsignalr`
 
-ManuaL: Just download the repo and
+NuGet: In your NuGet Package Manger
+`Install-Package ngSignalR`
+
+
+Manual: Just download the repo and
 `<script src="ngSignalR.js"></script>`
 
 ## Setting Up ##
