@@ -1,12 +1,15 @@
 describe('ngSignalR Service (Without generated proxy)', function() {
-  
+
   'use strict';
-  
+
   var ngSignalr,
-    q;
+    q,
+    ngSignalrProvider;
 
   beforeEach(function() {
-    module('ngSignalR');
+    module('ngSignalR', function(signalrProvider) {
+      ngSignalrProvider = signalrProvider;
+    });
 
     module(function($provide) {
       $provide.constant('$', $mockSignalrNoProxy);
@@ -18,8 +21,8 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     });
   });
 
-  /** 
-  * createHubConnection 
+  /**
+  * createHubConnection
   **/
   it('createHubConnection: throws exception if no channel specified', function () {
     expect(function(){
@@ -29,30 +32,33 @@ describe('ngSignalR Service (Without generated proxy)', function() {
   });
 
   it('createHubConnection: calls $.hubConnection()', function () {
-    spyOn($mockSignalrNoProxy, 'hubConnection').and.callThrough();  
-    
+    spyOn($mockSignalrNoProxy, 'hubConnection').and.callThrough();
+
     ngSignalr.createHubConnection('mockHub');
 
     expect($mockSignalrNoProxy.hubConnection).toHaveBeenCalled();
   });
 
   it('createHubConnection: returns connection and proxy', function () {
-    spyOn($mockSignalrNoProxy, 'hubConnection').and.callThrough();  
-    
+    spyOn($mockSignalrNoProxy, 'hubConnection').and.callThrough();
+
     var hub = ngSignalr.createHubConnection('mockHub');
-    
+
     expect(hub.connection).toBeDefined();
     expect(hub.proxy).toBeDefined();
   });
 
-  
+  it('createHubConnection: sets the connections logging from the providers default', function () {
+    var hub = ngSignalr.createHubConnection('mockHub');
+    expect(hub.connection.logging).toBeTruthy();
+  });
   /**
   * stopConnection
   **/
   it('stopConnection: calls the connections\' stop function', function () {
     var hub = ngSignalr.createHubConnection('mockHub');
     var connection = hub.connection;
-    
+
     spyOn(connection, 'stop');
     ngSignalr.stopConnection(connection)
     .then(function() {
@@ -101,7 +107,7 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     ngSignalr.startHubConnection(connection)
     .then(function() {
       expect(connection.start).toHaveBeenCalled();
-    });    
+    });
   });
 
   /**
@@ -123,7 +129,7 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     var proxy = hub.proxy;
 
     spyOn(proxy, 'on').and.callThrough();
-    
+
     expect(function () {
       ngSignalr.receiveProxy(proxy ,'mockFnName', 'notAFunction');
     })
@@ -149,7 +155,7 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     var proxy = hub.proxy;
 
     expect(function() {
-      ngSignalr.sendProxy(proxy, 'fnName',  { prop: 'prop' }, 'notAFunction');  
+      ngSignalr.sendProxy(proxy, 'fnName',  { prop: 'prop' }, 'notAFunction');
     })
     .toThrow(new TypeError('ErrorCallback function is not a function'));
   });
@@ -188,7 +194,7 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     spyOn(connection, 'starting');
 
     expect(function(){
-     ngSignalr.starting(callback, connection); 
+     ngSignalr.starting(callback, connection);
     })
     .toThrow(new TypeError('Callback function is not a function'));
   });
@@ -216,7 +222,7 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     spyOn(connection, 'received');
 
     expect(function(){
-      ngSignalr.received(callback, connection);  
+      ngSignalr.received(callback, connection);
     })
     .toThrow(new TypeError('Callback function is not a function'));
   });
