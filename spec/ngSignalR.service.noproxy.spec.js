@@ -5,51 +5,11 @@ describe('ngSignalR Service (Without generated proxy)', function() {
   var ngSignalr,
     q;
 
-  //Mock out SignalR jQuery library.
-  var $mock = {
-
-    //Not Using generated proxy mocks
-    //createHubConnection
-    hubConnection: function() {
-      var connection = {
-        createHubProxy: function() {
-          var proxy = {
-            on: function(fnName, callback) {
-              callback();
-            },
-            invoke:function(fnName, payload) {
-              return payload;
-            }
-          };
-          return proxy;
-        }, 
-        stop: function(){
-          return true;
-        },
-        start: function() {
-          return {done: function(){} };
-        },
-        logging:false,
-        starting: function(){},
-        received: function(){},
-        connectionSlow: function(){},
-        reconnecting: function(){},
-        reconnected: function(){},
-        stateChanged: function(){},
-        disconnected: function(){},
-        error: function(){}
-      };
-      return connection; 
-    },
-
-  };
-
-
   beforeEach(function() {
     module('ngSignalR');
 
     module(function($provide) {
-      $provide.constant('$', $mock);
+      $provide.constant('$', $mockSignalrNoProxy);
     });
 
     inject(function($injector) {
@@ -69,15 +29,15 @@ describe('ngSignalR Service (Without generated proxy)', function() {
   });
 
   it('createHubConnection: calls $.hubConnection()', function () {
-    spyOn($mock, 'hubConnection').and.callThrough();  
+    spyOn($mockSignalrNoProxy, 'hubConnection').and.callThrough();  
     
     ngSignalr.createHubConnection('mockHub');
 
-    expect($mock.hubConnection).toHaveBeenCalled();
+    expect($mockSignalrNoProxy.hubConnection).toHaveBeenCalled();
   });
 
   it('createHubConnection: returns connection and proxy', function () {
-    spyOn($mock, 'hubConnection').and.callThrough();  
+    spyOn($mockSignalrNoProxy, 'hubConnection').and.callThrough();  
     
     var hub = ngSignalr.createHubConnection('mockHub');
     
@@ -191,7 +151,7 @@ describe('ngSignalR Service (Without generated proxy)', function() {
     expect(function() {
       ngSignalr.sendProxy(proxy, 'fnName',  { prop: 'prop' }, 'notAFunction');  
     })
-    .toThrow(new TypeError('errorCallback function is not a function'));
+    .toThrow(new TypeError('ErrorCallback function is not a function'));
   });
 
   /**

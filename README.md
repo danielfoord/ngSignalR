@@ -39,7 +39,7 @@ angular.module('App')
 });
 ```
 
-SignalR takes 4 transport methods: 
+SignalR takes 4 transport methods:
 
 - Web Sockets
 - Server Sent Events
@@ -67,7 +67,7 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  
+
   signalr.startHubConnection(connection); //Start the connection
 });
 ```
@@ -78,7 +78,7 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  
+
   //Must come before starting the connection
   signalr.logging(connection, true); //Enabled default SignalR client logging
   signalr.receive(connection, 'eventName', function (data) {
@@ -94,7 +94,7 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  
+
   var startConnection = function () {    
     signalr.receive(connection, 'eventName', function (data) {
       //Do something when invoked by server
@@ -112,7 +112,7 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-  
+
   $scope.model = {
     connectionOpen: false // Initialize the connectionOpen flag as false
   };
@@ -153,7 +153,8 @@ angular.module('App')
 .controller('Ctrl', function($scope, signalr) {
   var hub = signalr.createHubConnection('HubName');
   var connection = hub.connection;
-
+  var proxy = hub.proxy;
+  
   signalr.receiveProxy(proxy, 'eventName', function (data) {
     console.log(data);
   });

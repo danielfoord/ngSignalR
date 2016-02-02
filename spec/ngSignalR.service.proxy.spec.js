@@ -5,57 +5,11 @@ describe('ngSignalR Service (With generated proxy)', function() {
   var ngSignalr,
     q;
 
-  //Mock out SignalR jQuery library.
-  var $mock = {
-
-    //Using generated proxy mocks
-    //createConnection
-    connection: {
-      mockHub : {
-        stop: function(){
-          return true;
-        }, 
-        client : {},
-        server: {
-          mockFnName: function(payload) {
-            return payload;
-          }
-        }
-      },
-      mockHub2 : {
-        stop: function(){
-          return true;
-        },
-        client: {},
-        server: {
-          mockFnName: function(payload) {
-            return payload;
-          }
-        }
-      },
-      hub:{
-        start: function() {
-          return {done: function(){}};
-        },
-        logging : false,
-        starting: function(){},
-        received: function(){},
-        connectionSlow: function(){},
-        reconnecting: function(){},
-        reconnected: function(){},
-        stateChanged: function(){},
-        disconnected: function(){},
-        error: function(){}
-      }
-    }
-  };
-
-
   beforeEach(function() {
     module('ngSignalR');
 
     module(function($provide) {
-      $provide.constant('$', $mock);
+      $provide.constant('$', $mockSignalrProxy);
     });
 
     inject(function($injector) {
@@ -116,11 +70,11 @@ describe('ngSignalR Service (With generated proxy)', function() {
   **/
   it('startConnection: calls the connectons\' start function', function() {
     var connection  = ngSignalr.createConnection('mockHub');
-    spyOn($mock.connection.hub, 'start').and.callThrough();
+    spyOn($mockSignalrProxy.connection.hub, 'start').and.callThrough();
 
     ngSignalr.startConnection(connection)
     .then(function() {
-      expect($mock.connection.hub.start).toHaveBeenCalled();
+      expect($mockSignalrProxy.connection.hub.start).toHaveBeenCalled();
     });    
   });
 
@@ -163,7 +117,7 @@ describe('ngSignalR Service (With generated proxy)', function() {
     expect(function() {
       ngSignalr.send(connection, 'mockFnName',  { prop: 'prop' }, 'notAFunction');  
     })
-    .toThrow(new TypeError('errorCallback function is not a function'));
+    .toThrow(new TypeError('ErrorCallback function is not a function'));
   });
 
   /**
@@ -173,7 +127,7 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     ngSignalr.logging(true);
-    expect($mock.connection.hub.logging).toBeTruthy(true);
+    expect($mockSignalrProxy.connection.hub.logging).toBeTruthy(true);
   });
 
   /**
@@ -183,17 +137,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'starting');
+    spyOn($mockSignalrProxy.connection.hub, 'starting');
 
     ngSignalr.starting(callback);
-    expect($mock.connection.hub.starting).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.starting).toHaveBeenCalledWith(callback);
   });
 
   it('starting:  throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'starting');
+    spyOn($mockSignalrProxy.connection.hub, 'starting');
 
     expect(function(){
       ngSignalr.starting(callback);
@@ -208,17 +162,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'received');
+    spyOn($mockSignalrProxy.connection.hub, 'received');
 
     ngSignalr.received(callback);
-    expect($mock.connection.hub.received).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.received).toHaveBeenCalledWith(callback);
   });
 
   it('received: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'received');
+    spyOn($mockSignalrProxy.connection.hub, 'received');
 
     expect(function(){
        ngSignalr.received(callback);
@@ -234,17 +188,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'connectionSlow');
+    spyOn($mockSignalrProxy.connection.hub, 'connectionSlow');
 
     ngSignalr.connectionSlow(callback);
-    expect($mock.connection.hub.connectionSlow).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.connectionSlow).toHaveBeenCalledWith(callback);
   });
 
   it('connectionSlow: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'connectionSlow');
+    spyOn($mockSignalrProxy.connection.hub, 'connectionSlow');
 
     expect(function(){
        ngSignalr.connectionSlow(callback);
@@ -259,17 +213,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'reconnecting');
+    spyOn($mockSignalrProxy.connection.hub, 'reconnecting');
 
     ngSignalr.reconnecting(callback);
-    expect($mock.connection.hub.reconnecting).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.reconnecting).toHaveBeenCalledWith(callback);
   });
 
   it('reconnecting: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'reconnecting');
+    spyOn($mockSignalrProxy.connection.hub, 'reconnecting');
 
     expect(function(){
       ngSignalr.reconnecting(callback);
@@ -285,17 +239,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'reconnected');
+    spyOn($mockSignalrProxy.connection.hub, 'reconnected');
 
     ngSignalr.reconnected(callback);
-    expect($mock.connection.hub.reconnected).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.reconnected).toHaveBeenCalledWith(callback);
   });
 
   it('reconnected: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'reconnected');
+    spyOn($mockSignalrProxy.connection.hub, 'reconnected');
 
     expect(function(){
       ngSignalr.reconnected(callback);
@@ -311,17 +265,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'stateChanged');
+    spyOn($mockSignalrProxy.connection.hub, 'stateChanged');
 
     ngSignalr.stateChanged(callback);
-    expect($mock.connection.hub.stateChanged).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.stateChanged).toHaveBeenCalledWith(callback);
   });
 
   it('stateChanged: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'stateChanged');
+    spyOn($mockSignalrProxy.connection.hub, 'stateChanged');
 
     expect(function(){
       ngSignalr.stateChanged(callback);
@@ -337,17 +291,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'disconnected');
+    spyOn($mockSignalrProxy.connection.hub, 'disconnected');
 
     ngSignalr.disconnected(callback);
-    expect($mock.connection.hub.disconnected).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.disconnected).toHaveBeenCalledWith(callback);
   });
 
   it('disconnected: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'disconnected');
+    spyOn($mockSignalrProxy.connection.hub, 'disconnected');
 
     expect(function(){
       ngSignalr.disconnected(callback);
@@ -363,17 +317,17 @@ describe('ngSignalR Service (With generated proxy)', function() {
     ngSignalr.createConnection('mockHub');
 
     var callback = function(){};
-    spyOn($mock.connection.hub, 'error');
+    spyOn($mockSignalrProxy.connection.hub, 'error');
 
     ngSignalr.error(callback);
-    expect($mock.connection.hub.error).toHaveBeenCalledWith(callback);
+    expect($mockSignalrProxy.connection.hub.error).toHaveBeenCalledWith(callback);
   });
 
   it('error: throws an error if the callback is not a function', function(){
     ngSignalr.createConnection('mockHub');
 
     var callback = {};
-    spyOn($mock.connection.hub, 'error');
+    spyOn($mockSignalrProxy.connection.hub, 'error');
 
     expect(function(){
       ngSignalr.error(callback);
