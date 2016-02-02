@@ -40,6 +40,10 @@ angular.module('ngSignalR', [])
     return self.transports;
   };
 
+  self.logging = function (log) {
+    self.log = log;
+  };
+
   function checkConnectionCallback(connection, callback, noProxyCallback, proxyCallback) {
     if (angular.isFunction(callback) && angular.isDefined(connection)) {
       noProxyCallback.call(null, connection, callback);
@@ -77,6 +81,8 @@ angular.module('ngSignalR', [])
             connection = $.hubConnection();
           }
 
+          connection.logging = self.log;
+
           var cons = connections;
           cons.push(connection);
 
@@ -104,7 +110,9 @@ angular.module('ngSignalR', [])
           if (angular.isDefined(url)) {
             $.connection.hub.url = url;
           }
-          
+
+          $.connection.hub.logging = self.log;
+
           var connection = $.connection[channel],
               cons = connections;
 
