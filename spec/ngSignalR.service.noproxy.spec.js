@@ -2,14 +2,10 @@ describe('ngSignalR Service (Without generated proxy)', function() {
 
   'use strict';
 
-  var ngSignalr,
-    q,
-    ngSignalrProvider;
+  var ngSignalr;
 
   beforeEach(function() {
-    module('ngSignalR', function(signalrProvider) {
-      ngSignalrProvider = signalrProvider;
-    });
+    module('ngSignalR');
 
     module(function($provide) {
       $provide.constant('$', $mockSignalrNoProxy);
@@ -17,7 +13,6 @@ describe('ngSignalR Service (Without generated proxy)', function() {
 
     inject(function($injector) {
       ngSignalr = $injector.get('signalr');
-      q = $injector.get('$q');
     });
   });
 

@@ -3,7 +3,6 @@ describe('ngSignalR Service (With generated proxy)', function() {
   'use strict';
 
   var ngSignalr,
-    q,
     mockSignalrJQuery;
 
   beforeEach(function() {
@@ -15,7 +14,6 @@ describe('ngSignalR Service (With generated proxy)', function() {
 
     inject(function($injector) {
       ngSignalr = $injector.get('signalr');
-      q = $injector.get('$q');
       mockSignalrJQuery = $injector.get('$');
     });
   });
